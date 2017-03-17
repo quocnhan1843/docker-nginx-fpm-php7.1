@@ -1,0 +1,190 @@
+{
+    "AWSEBDockerrunVersion": "2",
+    "Authentication": {
+            "Bucket": "zops-test-eb",
+            "Key": "docker/config.json"
+    },
+    "volumes": [
+        {
+            "host": {
+                "sourcePath": "/var/www/zops"
+            },
+            "name": "zops-src"
+        }
+    ],
+    "containerDefinitions": [
+        {
+            "volumesFrom": [],
+            "memory": 128,
+            "extraHosts": null,
+            "dnsServers": null,
+            "disableNetworking": null,
+            "dnsSearchDomains": null,
+            "portMappings": [
+                {
+                    "hostPort": 11211,
+                    "containerPort": 11211,
+                    "protocol": "tcp"
+                }
+            ],
+            "hostname": null,
+            "essential": true,
+            "entryPoint": null,
+            "mountPoints": [],
+            "name": "memcached",
+            "ulimits": null,
+            "dockerSecurityOptions": null,
+            "environment": [],
+            "links": null,
+            "workingDirectory": null,
+            "readonlyRootFilesystem": null,
+            "image": "536070040374.dkr.ecr.ap-southeast-1.amazonaws.com/zops:memcached",
+            "command": null,
+            "user": null,
+            "dockerLabels": null,
+            "logConfiguration": null,
+            "cpu": 0,
+            "privileged": null,
+            "memoryReservation": null
+        },
+        {
+            "volumesFrom": [],
+            "memory": null,
+            "extraHosts": null,
+            "dnsServers": null,
+            "disableNetworking": null,
+            "dnsSearchDomains": null,
+            "portMappings": [],
+            "hostname": null,
+            "essential": false,
+            "entryPoint": null,
+            "mountPoints": [
+                {
+                    "containerPath": "/var/www/zops",
+                    "sourceVolume": "zops-src",
+                    "readOnly": null
+                }
+            ],
+            "name": "src",
+            "ulimits": null,
+            "dockerSecurityOptions": null,
+            "environment": [
+                {
+                    "name": "GIT_PASSWORD",
+                    "value": ""
+                },
+                {
+                    "name": "RUN_SCRIPT",
+                    "value": "1"
+                }
+            ],
+            "links": [
+                "memcached:memcached"
+            ],
+            "workingDirectory": null,
+            "readonlyRootFilesystem": null,
+            "image": "536070040374.dkr.ecr.ap-southeast-1.amazonaws.com/zops:src",
+            "command": null,
+            "user": null,
+            "dockerLabels": null,
+            "logConfiguration": null,
+            "cpu": 0,
+            "privileged": null,
+            "memoryReservation": 128
+        },
+        {
+            "volumesFrom": [
+                {
+                    "readOnly": null,
+                    "sourceContainer": "src"
+                }
+            ],
+            "memory": 128,
+            "extraHosts": null,
+            "dnsServers": null,
+            "disableNetworking": null,
+            "dnsSearchDomains": null,
+            "portMappings": [
+                {
+                    "hostPort": 9000,
+                    "containerPort": 9000,
+                    "protocol": "tcp"
+                }
+            ],
+            "hostname": null,
+            "essential": true,
+            "entryPoint": null,
+            "mountPoints": [
+                {
+                    "containerPath": "/var/www/zops",
+                    "sourceVolume": "zops-src",
+                    "readOnly": null
+                }
+            ],
+            "name": "fpm-7",
+            "ulimits": null,
+            "dockerSecurityOptions": null,
+            "environment": [],
+            "links": [
+                "memcached:memcached"
+            ],
+            "workingDirectory": null,
+            "readonlyRootFilesystem": null,
+            "image": "536070040374.dkr.ecr.ap-southeast-1.amazonaws.com/zops:fpm-7",
+            "command": null,
+            "user": null,
+            "dockerLabels": null,
+            "logConfiguration": null,
+            "cpu": 0,
+            "privileged": null,
+            "memoryReservation": null
+        },
+        {
+            "volumesFrom": [
+                {
+                    "readOnly": null,
+                    "sourceContainer": "fpm-7"
+                }
+            ],
+            "memory": 128,
+            "extraHosts": null,
+            "dnsServers": null,
+            "disableNetworking": null,
+            "dnsSearchDomains": null,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "hostname": null,
+            "essential": true,
+            "entryPoint": null,
+            "mountPoints": [
+                {
+                    "containerPath": "/var/www/zops",
+                    "sourceVolume": "zops-src",
+                    "readOnly": null
+                }
+            ],
+            "name": "nginx-7",
+            "ulimits": null,
+            "dockerSecurityOptions": null,
+            "environment": [],
+            "links": [
+                "fpm-7:fpm-7"
+            ],
+            "workingDirectory": null,
+            "readonlyRootFilesystem": null,
+            "image": "536070040374.dkr.ecr.ap-southeast-1.amazonaws.com/zops:nginx-7",
+            "command": null,
+            "user": null,
+            "dockerLabels": null,
+            "logConfiguration": null,
+            "cpu": 0,
+            "privileged": null,
+            "memoryReservation": null
+        }
+    ]
+}

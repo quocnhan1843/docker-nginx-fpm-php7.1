@@ -1,0 +1,23 @@
+version: '2'
+services:
+  src:
+    image: project/src
+    volumes:
+      - %project_path%:/var/www/project:rw
+    privileged: true
+  fpm-7:
+    image: project/fpm-7
+    volumes_from:
+      - src
+    privileged: true
+  nginx-7:
+    image: project/nginx-7
+    volumes_from:
+      - fpm-7
+    links:
+      - fpm-7:fpm-7
+    ports:
+      - "8080:80"
+    privileged: true
+volumes:
+  src: {}
