@@ -46,17 +46,6 @@ RUN mkdir -pv /var/www/project
 
 WORKDIR /var/www/project
 
-# Copy script
-COPY data/src.sh /var/www/src.sh
-RUN chmod +x /var/www/src.sh
-
-# Copy env.ini
-COPY data/environment.ini /var/www/environment.ini
-
 ENV LOCATION /var/www/project
-ENV BRANCH develop
-
-# set env RUN_SCRIPT=1 for `clean up, pull code and build lib`
-ENTRYPOINT ["/var/www/src.sh"]
 
 #CMD ["tail", "-f", "/dev/null"]

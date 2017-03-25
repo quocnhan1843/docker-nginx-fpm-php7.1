@@ -53,12 +53,6 @@ RUN apt-get update && \
     zip \
     opcache
 
-# Install common properties
-#RUN apt-get update && \
-#    wget -O -  https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
-#    echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list.d/php7.list && \
-#    echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list.d/php7.list
-
 RUN apt-get update && \
     apt-get install -y apt-transport-https lsb-release ca-certificates && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \

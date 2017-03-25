@@ -6,14 +6,9 @@
 	<body>
 		<h1>Book-O-Rama Book Entry Results</h1>
 		<?php
-			$databases = new PDO('mysql:host=10.0.2.2;dbname=books', 'root', '');
-		    if ($databases) {
-		        die('Could not connect');
-		    }
-		    echo 'Connected successfully';
-
-		    die('DIE');
-
+			$dsn = 'mysql:dbname=books;host=10.0.2.2';
+			$user = 'root';
+			$password = '';
 			if (!isset($_POST['ISBN']) || !isset($_POST['Author']) || !isset($_POST['Title']) || !isset($_POST['Price'])) {
 				echo "<p>You have not entered all the required details.<br />
 			Please go back and try again.</p>";
@@ -25,21 +20,15 @@
 			$title=$_POST['Title'];
 			$price=$_POST['Price'];
 			$price = doubleval($price);
-		 	if (mysqli_connect_errno()) {
-				echo "<p>Error: Could not connect to database.<br/>
-				Please try again later.</p>";
-				exit;
-		 	}
-		 	$query = "INSERT INTO books VALUES (?, ?, ?, ?)";
-			$stmt = $db->prepare($query);
-			$stmt->bind_param('sssd', $isbn, $author, $title, $price);
-			$stmt->execute();
-			if ($stmt->affected_rows > 0) {
-				echo "<p>Book inserted into the database.</p>";
-			} else {
-				echo "<p>An error has occurred.<br/>
-				The item was not added.</p>";
+			try {
+			    $dbh = new PDO($dsn, $user, $password);
+			    echo "Success";
+			} catch (PDOException $e) {
+			    echo 'Connection failed: ' . $e->getMessage();
 			}
+		 	$query = "INSERT INTO books(isbn, author, title, price) VALUES (:isbn, :author, :title, :price)";
+			$stmt = $dbh->prepare($query);
+			$stmt->execute(array(':isbn' => $isbn, ':author' => $author, ':title' => $title, ':price' => $price));
 		 	$db->close();
 	 ?>
 	</body>
